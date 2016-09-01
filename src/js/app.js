@@ -1,24 +1,24 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {createStore, applyMiddleware, combineReducers} from 'redux';
+import {createStore, combineReducers, compose} from 'redux';
 import {Provider} from 'react-redux';
 import {Router, Route, IndexRedirect, browserHistory} from 'react-router';
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux';
-import createLogger from 'redux-logger';
+import mainReducer from './modules/main';
 import AppView from './appView';
 import Homepage from './homepage';
 import QuestionsForm from './questionsForm';
 
-const loggerMiddleware = createLogger();
 const combinedReducers = combineReducers({
+	main: mainReducer,
   routing: routerReducer
 });
+const devTools = window.devToolsExtension ? [window.devToolsExtension()] : [];
+
 
 const Store = createStore(
   combinedReducers,
-  applyMiddleware(
-    loggerMiddleware
-  )
+  compose(...devTools)
 )
 const history = syncHistoryWithStore(browserHistory, Store);
 
